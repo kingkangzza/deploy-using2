@@ -55,7 +55,7 @@ AR_YR_gangwon = AR_YR_whole[AR_YR_whole['SD'] == '강원도'] # 강원도만 한
 AR_YR_gangwon['SGG_cd'] = AR_YR_gangwon['SGG_cd'].astype(int)
 
 # 오프라인 모드로 변경...
-pyo.init_notebook_mode()
+# pyo.init_notebook_mode()
 
 template='plotly_white'
 
