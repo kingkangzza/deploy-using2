@@ -1,0 +1,83 @@
+#page-content{
+    margin-left: 15rem;
+    margin-right: 2rem;
+    padding: 2rem 1rem;
+}
+
+.whole_div{
+    width:100%;
+}
+
+.head_div{
+    top: 15px;
+    width:100%;
+    height:5%;
+    text-align:center;
+    clear:both;
+}
+
+.left_div{
+    width:49%;
+    margin-top:2rem;
+    float:left;
+}
+
+.p_up_down, .yp_move, .aging_ratio, .early_ratio, .p_den, .p_week, .youth, .finance{
+    text-align:center;
+    width:100%;
+    display:flex;
+    flex-wrap:wrap;
+    flex-direction:column;
+    align-items: center;
+    justify-content: center;
+}
+
+.p_up_down_word, .yp_move_word, .aging_ratio_word, .early_ratio_word, .p_den_word, .p_week_word, .youth_word, .finance_word{
+    width:100%;
+    font-size:1rem;
+    font-weight:600;
+    background-color: #FCE5D7;
+}
+
+.p_up_down_graph, .yp_move_graph, .aging_ratio_graph, .early_ratio_graph, .p_den_graph, .p_week_graph, .youth_graph, .finance_graph{
+    width:100%;
+    background-color:aliceblue;
+}
+
+.p_up_down_map, .yp_move_map, .aging_ratio_map, .early_ratio_map, .p_den_map, .p_week_map, .youth_map, .finance_map{
+    width:100%;
+    background-color:antiquewhite;
+}
+
+.right_div{
+    width:49%;
+    margin-top:2rem;
+    float:right;
+}
+
+.kinder, .schools, .child_fa, .old_fa, .hospital_fa, .cul_phy, .general_hospital, .active_p, .card_sales{
+    text-align:center;
+    width:100%;
+    display:flex;
+    flex-wrap:wrap;
+    flex-direction:column;
+    align-items: center;
+    justify-content: center;
+}
+
+.kinder_word, .schools_word, .child_fa_word, .old_fa_word, .hospital_fa_word, .cul_phy_word, .general_hospital_word, .active_p_word, .card_sales_word{
+    width:100%;
+    font-size:1rem;
+    font-weight:600;
+    background-color: #FCE5D7;
+}
+
+.kinder_graph, .schools_graph, .child_fa_graph, .old_fa_graph, .hospital_fa_graph, .cul_phy_graph, .general_hospital_graph, .active_p_graph1, .active_p_graph2, .card_sales_graph1, .card_sales_graph2{
+    width:100%;
+    background-color:aliceblue;
+}
+
+.kinder_map, .schools_map, .child_fa_map, .old_fa_map, .hospital_fa_map, .cul_phy_map, .general_hospital_map{
+    width:100%;
+    background-color:antiquewhite;
+}
