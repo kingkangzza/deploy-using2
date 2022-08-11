@@ -1,15 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# # Dash를 활용한 보고서 형태 결과 작성
-# 
-# ### 예시 데이터 작성
-# 
-# ##### 코드 수행되고 창이 열리는데 약간의 시간이 소요됨.
-
-# ##### 예시 데이터 생성
-
-# In[1]:
 import dash
 import dash_bootstrap_components as dbc
 import plotly.graph_objs as go
@@ -21,40 +9,68 @@ import plotly.express as px
 import plotly.offline as pyo
 import pandas as pd
 
+# geojson load
+seoul_nm = './tmp_data/seoul_SGG.geojson'
+seoul_SGG = json.load(open(seoul_nm, encoding='utf-8'))
+
+gangwon_nm = './tmp_data/gangwon_SGG.geojson'
+gangwon_SGG = json.load(open(gangwon_nm, encoding='utf-8'))
+
+# CSV load
+
+##인구밀도
+P_DEN_whole = pd.read_csv('./tmp_data/P_DEN_SGG2017.csv')
+
+P_DEN_seoul = P_DEN_whole[P_DEN_whole['SD'] == '서울특별시'] # 서울 특별시만 한정해서 사용/
+P_DEN_seoul['SGG_cd'] = P_DEN_seoul['SGG_cd'].astype(int)
+
+P_DEN_gangwon = P_DEN_whole[P_DEN_whole['SD'] == '강원도'] # 강원도만 한정해서 사용/
+P_DEN_gangwon['SGG_cd'] = P_DEN_gangwon['SGG_cd'].astype(int)
+
+##조출생률
+CBR_whole = pd.read_csv('./tmp_data/CBR_SGG2017.csv')
+
+CBR_seoul = CBR_whole[CBR_whole['SD'] == '서울특별시'] # 서울 특별시만 한정해서 사용/
+CBR_seoul['SGG_cd'] = CBR_seoul['SGG_cd'].astype(int)
+
+CBR_gangwon = CBR_whole[CBR_whole['SD'] == '강원도'] # 강원도만 한정해서 사용
+CBR_gangwon['SGG_cd'] = CBR_gangwon['SGG_cd'].astype(int)
+
+##재정자립도
+FI_whole = pd.read_csv('./tmp_data/FI_SGG2017.csv')
+
+FI_seoul = FI_whole[FI_whole['SD'] == '서울특별시'] # 서울 특별시만 한정해서 사용/
+FI_seoul['SGG_cd'] = FI_seoul['SGG_cd'].astype(int)
+
+FI_gangwon = FI_whole[FI_whole['SD'] == '강원도'] # 강원도만 한정해서 사용/
+FI_gangwon['SGG_cd'] = FI_gangwon['SGG_cd'].astype(int)
+
+##유소년비율 & 고령화비율
+AR_YR_whole = pd.read_csv('./tmp_data/AR_YR_SGG2017.csv')
+
+AR_YR_seoul = AR_YR_whole[AR_YR_whole['SD'] == '서울특별시'] # 서울 특별시만 한정해서 사용/
+P_DEN_seoul['SGG_cd'] = P_DEN_seoul['SGG_cd'].astype(int)
+
+AR_YR_gangwon = AR_YR_whole[AR_YR_whole['SD'] == '강원도'] # 강원도만 한정해서 사용/
+AR_YR_gangwon['SGG_cd'] = AR_YR_gangwon['SGG_cd'].astype(int)
+
 # 오프라인 모드로 변경...
-#pyo.init_notebook_mode()
+pyo.init_notebook_mode()
 
 template='plotly_white'
 
-# geojson load
-state_geo_seoul = './data/merge_shp_csv_seoul2.geojson'
-state_geo_seoul1 = json.load(open(state_geo_seoul, encoding='utf-8'))
-
-state_geo_gangwon = './data/gangwon4.geojson'
-state_geo_gangwon1 = json.load(open(state_geo_gangwon, encoding='utf-8'))
-
-# 지도 시각화 예시 자료를 위한 인구 밀도 CSV 로드
-df_whole = pd.read_csv('./data/merge_P_A.csv')
-df_seoul = df_whole[df_whole['SD'] == '서울특별시'] # 서울 특별시만 한정해서 사용/
-df_seoul['new_code'] = df_seoul['new_code'].astype(int)
-df_seoul.head()
-
-df_gangwon = df_whole[df_whole['SD'] == '강원도'] # 강원도만 한정해서 사용/
-df_gangwon['new_code'] = df_gangwon['new_code'].astype(int)
-df_gangwon.head()
-
-
-fig_seoul = px.choropleth(df_seoul, geojson=state_geo_seoul1, locations='new_code', color='P_DEN',
+fig_seoul = px.choropleth(P_DEN_seoul, geojson=seoul_SGG, locations='SGG_cd', color='P_DEN',
                                 color_continuous_scale='Viridis',
-                                featureidkey='properties.new_code')
+                                featureidkey='properties.SGG_cd')
 fig_seoul.update_geos(fitbounds="locations", visible=False)
 fig_seoul.update_layout(title_text='인구밀도 예시 데이터로 추후 수정 예정입니다.', title_font_size=20)
 
-fig_gangwon = px.choropleth(df_gangwon, geojson=state_geo_gangwon1, locations='new_code', color='P_DEN',
+fig_gangwon = px.choropleth(P_DEN_seoul, geojson=seoul_SGG, locations='SGG_cd', color='P_DEN',
                                 color_continuous_scale='Viridis',
-                                featureidkey='properties.new_code')
+                                featureidkey='properties.SGG_cd')
 fig_gangwon.update_geos(fitbounds="locations", visible=False)
 fig_gangwon.update_layout(title_text='인구밀도 예시 데이터로 추후 수정 예정입니다.', title_font_size=20)
+
 
 # 시설 수 관련 지표 그래프에 들어갈 예시 데이터
 area=['전국', '인구감소지역(평균)', '관심지역(평균)','서울특별시']
@@ -161,11 +177,11 @@ fig7.update_layout(polar=dict(radialaxis=dict(visible=True)),showlegend=False)
 fig7.update_layout(autosize=True,template=template)
 
 fig7.update_polars(angularaxis_gridwidth=0.1)
-fig7.update_polars(angularaxis_griddash='dash')
+#fig7.update_polars(angularaxis_griddash='dash')
 fig7.update_polars(angularaxis_gridcolor='gray')
 
 fig7.update_polars(radialaxis_color='gray')
-fig7.update_polars(radialaxis_griddash='dash')
+#fig7.update_polars(radialaxis_griddash='dash')
 fig7.update_polars(radialaxis_showgrid=True)
 fig7.update_polars(radialaxis_gridwidth=0.9)
 
@@ -206,7 +222,77 @@ fig10.update_layout(title={'text': "(단위:인구 천명당)",'y':0.82,'x':0.78
 fig10.update_layout(title_font_size=18)
 fig10.update_yaxes(showline=True, linewidth=2, gridwidth=3, linecolor='white', gridcolor='lightgray')
 
+#지도 
 
+# 오프라인 모드로 변경...
+pyo.init_notebook_mode()
+
+template='plotly_white'
+
+##인구밀도
+fig_PDEN2017seoul = px.choropleth(P_DEN_seoul, geojson=seoul_SGG, locations='SGG_cd', color='P_DEN',
+                                color_continuous_scale='Viridis',
+                                featureidkey='properties.SGG_cd')
+fig_PDEN2017seoul.update_geos(fitbounds="locations", visible=False)
+fig_PDEN2017seoul.update_layout(title_text='2017년 서울 조출생률', title_font_size=20)
+
+fig_PDEN2017gangwon = px.choropleth(P_DEN_gangwon, geojson=gangwon_SGG, locations='SGG_cd', color='P_DEN',
+                                color_continuous_scale='Viridis',
+                                featureidkey='properties.SGG_cd')
+fig_PDEN2017gangwon.update_geos(fitbounds="locations", visible=False)
+fig_PDEN2017gangwon.update_layout(title_text='2017년 강원도 인구밀도', title_font_size=20)
+
+##조출생률
+fig_CBR2017seoul = px.choropleth(CBR_seoul, geojson=seoul_SGG, locations='SGG_cd', color='CBR',
+                                color_continuous_scale='Viridis',
+                                featureidkey='properties.SGG_cd')
+fig_CBR2017seoul.update_geos(fitbounds="locations", visible=False)
+fig_CBR2017seoul.update_layout(title_text='2017년 서울 조출생률', title_font_size=20)
+
+fig_CBR2017gangwon = px.choropleth(CBR_gangwon, geojson=gangwon_SGG, locations='SGG_cd', color='CBR',
+                                color_continuous_scale='Viridis',
+                                featureidkey='properties.SGG_cd')
+fig_CBR2017gangwon.update_geos(fitbounds="locations", visible=False)
+fig_CBR2017gangwon.update_layout(title_text='2017년 강원도 조출생률', title_font_size=20)
+
+##재정자립도
+fig_FI2017seoul = px.choropleth(FI_seoul, geojson=seoul_SGG, locations='SGG_cd', color='FI',
+                                color_continuous_scale='Viridis',
+                                featureidkey='properties.SGG_cd')
+fig_FI2017seoul.update_geos(fitbounds="locations", visible=False)
+fig_FI2017seoul.update_layout(title_text='2017년 서울 재정자립도', title_font_size=20)
+
+fig_FI2017gangwon = px.choropleth(FI_gangwon, geojson=gangwon_SGG, locations='SGG_cd', color='FI',
+                                color_continuous_scale='Viridis',
+                                featureidkey='properties.SGG_cd')
+fig_FI2017gangwon.update_geos(fitbounds="locations", visible=False)
+fig_FI2017gangwon.update_layout(title_text='2017년 강원도 재정자립도', title_font_size=20)
+
+##고령화비율
+fig_AR2017seoul = px.choropleth(AR_YR_seoul, geojson=seoul_SGG, locations='SGG_cd', color='A_R',
+                                color_continuous_scale='Viridis',
+                                featureidkey='properties.SGG_cd')
+fig_AR2017seoul.update_geos(fitbounds="locations", visible=False)
+fig_AR2017seoul.update_layout(title_text='2017년 서울 고령화 비율', title_font_size=20)
+
+fig_AR2017gangwon = px.choropleth(AR_YR_gangwon, geojson=gangwon_SGG, locations='SGG_cd', color='A_R',
+                                color_continuous_scale='Viridis',
+                                featureidkey='properties.SGG_cd')
+fig_AR2017gangwon.update_geos(fitbounds="locations", visible=False)
+fig_AR2017gangwon.update_layout(title_text='2017년 강원도 고령화 비율', title_font_size=20)
+
+##유소년비율
+fig_YR2017seoul = px.choropleth(AR_YR_seoul, geojson=seoul_SGG, locations='SGG_cd', color='Y_R',
+                                color_continuous_scale='Viridis',
+                                featureidkey='properties.SGG_cd')
+fig_YR2017seoul.update_geos(fitbounds="locations", visible=False)
+fig_YR2017seoul.update_layout(title_text='2017년 서울 유소년 비율', title_font_size=20)
+
+fig_YR2017gangwon = px.choropleth(AR_YR_gangwon, geojson=gangwon_SGG, locations='SGG_cd', color='Y_R',
+                                color_continuous_scale='Viridis',
+                                featureidkey='properties.SGG_cd')
+fig_YR2017gangwon.update_geos(fitbounds="locations", visible=False)
+fig_YR2017gangwon.update_layout(title_text='2017년 강원도 유소년 비율', title_font_size=20)
 
 ## dash code
 
@@ -273,15 +359,15 @@ def render_page_content(pathname):
                                                                                      
                                                                                     html.Div(className='aging_ratio', children=[html.P(className='aging_ratio_word', children='고령화비율'),
                                                                                     html.Nav(className='aging_ratio_graph', children = dcc.Graph(figure=fig3)),
-                                                                                    html.Nav(className='aging_ratio_map', children=dcc.Graph(figure=fig_seoul))]),
+                                                                                    html.Nav(className='aging_ratio_map', children=dcc.Graph(figure=fig_AR2017seoul))]),
                                                                                      
                                                                                     html.Div(className='early_ratio', children=[html.P(className='early_ratio_word', children='조출생률'),
                                                                                     html.Nav(className='early_ratio_graph', children = dcc.Graph(figure=fig4)),
-                                                                                    html.Nav(className='early_ratio_map', children=dcc.Graph(figure=fig_seoul))]),
+                                                                                    html.Nav(className='early_ratio_map', children=dcc.Graph(figure=fig_CBR2017seoul))]),
                                                                                      
                                                                                     html.Div(className='p_den', children=[html.P(className='p_den_word', children='인구밀도'),
                                                                                     html.Nav(className='p_den_graph', children = dcc.Graph(figure=fig5)),
-                                                                                    html.Nav(className='p_den_map', children=dcc.Graph(figure=fig_seoul))]),
+                                                                                    html.Nav(className='p_den_map', children=dcc.Graph(figure=fig_PDEN2017seoul))]),
                                                                                      
                                                                                     html.Div(className='p_week', children=[html.P(className='p_week_word', children='주간인구'),
                                                                                     html.Nav(className='p_week_graph', children = dcc.Graph(figure=fig1)),
@@ -289,11 +375,11 @@ def render_page_content(pathname):
                                                                                      
                                                                                     html.Div(className='youth', children=[html.P(className='youth_word', children='유소년비율'),
                                                                                     html.Nav(className='youth_graph', children = dcc.Graph(figure=fig2)),
-                                                                                    html.Nav(className='youth_map', children=dcc.Graph(figure=fig_seoul))]),
+                                                                                    html.Nav(className='youth_map', children=dcc.Graph(figure=fig_YR2017seoul))]),
                                                                                      
                                                                                     html.Div(className='finance', children=[html.P(className='finance_word', children='재정자립도'),
                                                                                     html.Nav(className='finance_graph', children = dcc.Graph(figure=fig3)),
-                                                                                    html.Nav(className='finance_map', children=dcc.Graph(figure=fig_seoul))]) 
+                                                                                    html.Nav(className='finance_map', children=dcc.Graph(figure=fig_FI2017seoul))]) 
                                                                                     
                                                                                     ]),
                                             
@@ -349,15 +435,15 @@ def render_page_content(pathname):
                                                                                      
                                                                                     html.Div(className='aging_ratio', children=[html.P(className='aging_ratio_word', children='고령화비율'),
                                                                                     html.Nav(className='aging_ratio_graph', children = dcc.Graph(figure=fig3)),
-                                                                                    html.Nav(className='aging_ratio_map', children=dcc.Graph(figure=fig_gangwon))]),
+                                                                                    html.Nav(className='aging_ratio_map', children=dcc.Graph(figure=fig_AR2017gangwon))]),
                                                                                      
                                                                                     html.Div(className='early_ratio', children=[html.P(className='early_ratio_word', children='조출생률'),
                                                                                     html.Nav(className='early_ratio_graph', children = dcc.Graph(figure=fig4)),
-                                                                                    html.Nav(className='early_ratio_map', children=dcc.Graph(figure=fig_gangwon))]),
+                                                                                    html.Nav(className='early_ratio_map', children=dcc.Graph(figure=fig_CBR2017gangwon))]),
                                                                                      
                                                                                     html.Div(className='p_den', children=[html.P(className='p_den_word', children='인구밀도'),
                                                                                     html.Nav(className='p_den_graph', children = dcc.Graph(figure=fig5)),
-                                                                                    html.Nav(className='p_den_map', children=dcc.Graph(figure=fig_gangwon))]),
+                                                                                    html.Nav(className='p_den_map', children=dcc.Graph(figure=fig_PDEN2017gangwon))]),
                                                                                      
                                                                                     html.Div(className='p_week', children=[html.P(className='p_week_word', children='주간인구'),
                                                                                     html.Nav(className='p_week_graph', children = dcc.Graph(figure=fig1)),
@@ -365,11 +451,11 @@ def render_page_content(pathname):
                                                                                      
                                                                                     html.Div(className='youth', children=[html.P(className='youth_word', children='유소년비율'),
                                                                                     html.Nav(className='youth_graph', children = dcc.Graph(figure=fig2)),
-                                                                                    html.Nav(className='youth_map', children=dcc.Graph(figure=fig_gangwon))]),
+                                                                                    html.Nav(className='youth_map', children=dcc.Graph(figure=fig_YR2017gangwon))]),
                                                                                      
                                                                                     html.Div(className='finance', children=[html.P(className='finance_word', children='재정자립도'),
                                                                                     html.Nav(className='finance_graph', children = dcc.Graph(figure=fig3)),
-                                                                                    html.Nav(className='finance_map', children=dcc.Graph(figure=fig_gangwon))]) 
+                                                                                    html.Nav(className='finance_map', children=dcc.Graph(figure=fig_FI2017gangwon))]) 
                                                                                     
                                                                                     ]),
                                             
