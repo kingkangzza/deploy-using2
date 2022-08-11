@@ -296,7 +296,7 @@ fig_YR2017gangwon.update_layout(title_text='2017년 강원도 유소년 비율',
 
 ## dash code
 
-app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 app.title = "인구감소지역 지원방안"
 server = app.server
 
