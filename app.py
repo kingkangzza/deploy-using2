@@ -225,7 +225,7 @@ fig10.update_yaxes(showline=True, linewidth=2, gridwidth=3, linecolor='white', g
 #지도 
 
 # 오프라인 모드로 변경...
-pyo.init_notebook_mode()
+#pyo.init_notebook_mode()
 
 template='plotly_white'
 
